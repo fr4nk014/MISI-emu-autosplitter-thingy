@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Memory;
@@ -12,7 +13,7 @@ namespace MISI_emu_autosplitter_thingy
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, IntPtr dwExtraInfo);
 
         static Mem mem;
-
+        
 
         const byte p_key = 0x50;
 
@@ -25,9 +26,16 @@ namespace MISI_emu_autosplitter_thingy
         static void Main(string[] args)
         {
             mem = new();
+            
+
 
             while (true)
             {
+                if(!mem.OpenProcess("pcsx2 VRR.exe"))
+                {
+                    Console.WriteLine("no emu");
+                    continue;
+                }
                 if(shouldpause())
                 {
                     fake_keypress(p_key);
@@ -36,7 +44,7 @@ namespace MISI_emu_autosplitter_thingy
                 {
                     fake_keypress(p_key);
                 }
-                Thread.Sleep(10);
+                Thread.Sleep(50);
             }
         }
 
@@ -47,6 +55,7 @@ namespace MISI_emu_autosplitter_thingy
             if(awaitingpause)
             {
                 int gamestate = mem.ReadByte("0x203FF868");
+                //Console.WriteLine($"Gamestate value: {gamestate}");
                 if (gamestate == 0xA || gamestate == 0x1A)
                 {
                     awaitingpause = false;
@@ -60,6 +69,7 @@ namespace MISI_emu_autosplitter_thingy
             if (!awaitingpause)
             {
                 int gamestate = mem.ReadByte("0x203FF868");
+                //Console.WriteLine($"Gamestate value: {gamestate}");
                 if (gamestate == 0x2)
                 {
                     awaitingpause = true;
@@ -71,6 +81,7 @@ namespace MISI_emu_autosplitter_thingy
 
         static void fake_keypress(byte keycode)
         {
+            //Console.WriteLine("Pressed P successfully");
             keybd_event(keycode, 0, key_down, IntPtr.Zero);
             Thread.Sleep(100);
             keybd_event(keycode, 0, key_up, IntPtr.Zero);
