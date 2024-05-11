@@ -91,7 +91,7 @@ namespace MISI_emu_autosplitter_thingy
 
                     if(!mem.OpenProcess(proc_name))
                     {
-                        LogSomething("Lost emu");
+                        LogSomething("Lost emu", is_bad: true);
                         break;
                     }
                 }
