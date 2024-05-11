@@ -41,23 +41,23 @@ namespace MISI_emu_autosplitter_thingy
 
             while (true)
             {
-                Console.WriteLine("Looking for emu");
+                LogSomething("Looking for emu");
 
                 string proc_name = GetEmuName();
-                while (proc_name == "")
+                while (proc_name == null)
                 {
                     proc_name = GetEmuName();
                     Thread.Sleep(500);
                 }
                 if (!mem.OpenProcess(proc_name))
                 {
-                    Console.WriteLine("No emu");
+                    LogSomething("No emu");
                     Thread.Sleep(100);
                     continue;
                 }
 
-                Console.WriteLine("Emu found");
-                Console.WriteLine("Looking for EE base");
+                LogSomething("Emu found");
+                LogSomething("Looking for EE base");
 
                 while (!GoodBase)
                 {
@@ -71,9 +71,9 @@ namespace MISI_emu_autosplitter_thingy
                     }
                     Thread.Sleep(50);
                 }
-                Console.WriteLine("Found memory base: " + BaseAddress.ToString("X"));
+                LogSomething("Found memory base: " + BaseAddress.ToString("X"));
 
-                Console.WriteLine("Everything should work");
+                LogSomething("Everything should work");
 
                 bool working = true;
                 while(working)
@@ -91,12 +91,20 @@ namespace MISI_emu_autosplitter_thingy
 
                     if(!mem.OpenProcess(proc_name))
                     {
-                        Console.WriteLine("Lost emu");
+                        LogSomething("Lost emu");
                         break;
                     }
                 }
                 
             }
+        }
+
+        static void LogSomething(string message, bool is_bad = false)
+        {
+            string timestamp = System.DateTime.Now.ToString("HH:mm:ss");
+
+            Console.ForegroundColor = (is_bad ? ConsoleColor.Red : ConsoleColor.White);
+            Console.WriteLine($"{timestamp}: {message}");
         }
 
         static string GetEmuName()
@@ -190,11 +198,11 @@ namespace MISI_emu_autosplitter_thingy
             if(awaitingpause)
             {
                 int gamestate = mem.ReadByte((BaseAddress+0x3FF868).ToString("X"));
-                //Console.WriteLine($"Gamestate value: {gamestate}");
+                //LogSomething($"Gamestate value: {gamestate}");
                 if (gamestate == 0xA || gamestate == 0x1A)
                 {
                     awaitingpause = false;
-                    Console.WriteLine("Should pause");
+                    LogSomething("Should pause");
                     return true;
                 }
             }
@@ -205,11 +213,11 @@ namespace MISI_emu_autosplitter_thingy
             if (!awaitingpause)
             {
                 int gamestate = mem.ReadByte((BaseAddress + 0x3FF868).ToString("X"));
-                //Console.WriteLine($"Gamestate value: {gamestate}");
+                //LogSomething($"Gamestate value: {gamestate}");
                 if (gamestate == 0x2)
                 {
                     awaitingpause = true;
-                    Console.WriteLine("Should resume");
+                    LogSomething("Should resume");
                     return true;
                 }
             }
@@ -221,7 +229,7 @@ namespace MISI_emu_autosplitter_thingy
             keybd_event(keycode, 0, key_down, IntPtr.Zero);
             Thread.Sleep(100);
             keybd_event(keycode, 0, key_up, IntPtr.Zero);
-            Console.WriteLine("Pressed P");
+            LogSomething("Pressed P");
         }
     }
 }
