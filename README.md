@@ -1,6 +1,10 @@
 # MISI emu autosplitter thingy
 ### Autosplitter/autopauser for Monsters, Inc. Scare Island PS2 speedruns
-This console app will pause your LiveSplit timer when your game is either watching a pre-rendered cutscene or loading the next map.
+#### ✨ Features
+- Pauses your LiveSplit timer when watching a pre-rendered cutscene or loading the next map
+- A console that logs the game state and errors (with timestamps) 
+#### 🚧 Planned
+- Autosplitting when getting medals
 
 # Version 1.0.0
 ### Notes
