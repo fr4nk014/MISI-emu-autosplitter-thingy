@@ -59,6 +59,7 @@ namespace MISI_emu_autosplitter_thingy
                 LogSomething("Emu found");
                 LogSomething("Looking for EE base");
 
+                bool lost_while_ee_scan = false;
                 while (!GoodBase)
                 {
                     if (!ScanningBase)
@@ -69,8 +70,17 @@ namespace MISI_emu_autosplitter_thingy
                             break;
                         }
                     }
+                    if (!mem.OpenProcess(proc_name))
+                    {
+                        LogSomething("Lost emu while scanning for base", is_bad: true);
+                        lost_while_ee_scan = true;
+                        break;
+                    }
                     Thread.Sleep(50);
                 }
+
+                if (lost_while_ee_scan) continue;
+
                 LogSomething("Found memory base: " + BaseAddress.ToString("X"));
 
                 LogSomething("Everything should work");
