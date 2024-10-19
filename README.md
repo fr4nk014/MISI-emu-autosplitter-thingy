@@ -25,4 +25,5 @@ An automatic timer pauser for **Monsters, Inc. Scare Island** speedrunning **(PC
 1. Run PCSX2 and boot Scare Island
 2. Create your run savestate (New Game -> Select Mike -> Press F1 when Mike comes out of the entrance elevator)
 3. Open your splits and start running
+- Enable "Global Hotkeys" from your LiveSplit settings
 - Remember that this program manually presses your P key, so having the emulator window focused is recommended.
